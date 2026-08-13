@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="assets/focuspocus-banner.png" alt="FocusPocus — Magia que sigue tus movimientos" width="100%">
+  <img src="assets/focuspocus-banner-v2.png" alt="FocusPocus — Magia que sigue tus movimientos" width="100%">
 </p>
 
 # FocusPocus
@@ -7,6 +7,12 @@
 FocusPocus es una utilidad moderna para Windows 11 que destaca el puntero, visualiza los clics y muestra teclas o atajos durante presentaciones, grabaciones y demostraciones.
 
 [Descargar la versión más reciente](https://github.com/ezenwa/FocusPocus/releases/latest) · [README en inglés](../README.md)
+
+## Así funciona
+
+<p align="center">
+  <img src="images/focuspocus-demo.gif" alt="Demostración del foco, clic y atajos globales de FocusPocus" width="100%">
+</p>
 
 ## Funciones
 

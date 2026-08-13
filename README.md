@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="docs/assets/focuspocus-banner.png" alt="FocusPocus — Magic that follows every move" width="100%">
+  <img src="docs/assets/focuspocus-banner-v2.png" alt="FocusPocus — Magic that follows every move" width="100%">
 </p>
 
 <p align="center">
@@ -10,6 +10,12 @@
   <a href="https://github.com/ezenwa/FocusPocus/releases/latest"><strong>Download latest release</strong></a>
   · <a href="docs/README.es.md">Español</a>
   · <a href="CHANGELOG.md">Changelog</a>
+</p>
+
+## See it in action
+
+<p align="center">
+  <img src="docs/images/focuspocus-demo.gif" alt="FocusPocus spotlight, click and global shortcut demonstration" width="100%">
 </p>
 
 ## Preview
