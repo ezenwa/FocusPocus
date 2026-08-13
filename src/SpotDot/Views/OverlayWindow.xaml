@@ -1,0 +1,17 @@
+<Window x:Class="SpotDot.Views.OverlayWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        AllowsTransparency="True" Background="Transparent" WindowStyle="None"
+        ShowInTaskbar="False" ShowActivated="False" Topmost="True" ResizeMode="NoResize">
+  <Grid x:Name="Stage" IsHitTestVisible="False" ClipToBounds="True">
+    <Rectangle x:Name="Dimmer" Fill="Black" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
+    <Canvas x:Name="EffectsLayer">
+      <Ellipse x:Name="ClickPulse" Visibility="Collapsed" StrokeThickness="0" Fill="#8835C2FF"/>
+    </Canvas>
+    <Border x:Name="KeyBadge" Visibility="Collapsed" Background="#E6181B24" BorderBrush="#55FFFFFF"
+            BorderThickness="1" CornerRadius="12" Padding="18,10"
+            HorizontalAlignment="Center" VerticalAlignment="Bottom" Margin="0,0,0,90">
+      <TextBlock x:Name="KeyLabel" FontSize="22" FontWeight="SemiBold" Foreground="#FFFFFFFF"/>
+    </Border>
+  </Grid>
+</Window>

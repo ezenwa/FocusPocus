@@ -1,0 +1,29 @@
+# Build output
+**/bin/
+**/obj/
+dist/
+publish/
+publish-*/
+tmp/
+
+# Local captures and diagnostics
+focuspocus-*-check.png
+focuspocus-*-final.png
+focuspocus-*-effects.png
+focuspocus-*-shortcuts.png
+ui-preview.png
+*.log
+
+# IDE and OS
+.vs/
+.vscode/
+*.user
+*.suo
+.DS_Store
+Thumbs.db
+
+# Packages and signing material
+*.pfx
+*.snk
+*.cer
+*.key

@@ -1,0 +1,25 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net8.0-windows</TargetFramework>
+    <UseWPF>true</UseWPF>
+    <UseWindowsForms>true</UseWindowsForms>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <ApplicationManifest>app.manifest</ApplicationManifest>
+    <ApplicationIcon>Assets\FocusPocus.ico</ApplicationIcon>
+    <AssemblyName>FocusPocus.Engine</AssemblyName>
+    <RootNamespace>SpotDot</RootNamespace>
+    <Version>2.1.0</Version>
+  </PropertyGroup>
+  <ItemGroup>
+    <Resource Include="Assets\FocusPocus.ico" />
+    <Resource Include="Assets\FocusPocus.png" />
+    <Resource Include="Assets\FocusPocus-Mark.png" />
+    <Content Include="Assets\FocusPocus-Tray.ico" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
+  <ItemGroup>
+    <Page Remove="Views\MainWindow.xaml;Views\AboutWindow.xaml;Views\AlertWindow.xaml" />
+    <Compile Remove="Views\MainWindow.xaml.cs;Views\AboutWindow.xaml.cs;Views\AlertWindow.xaml.cs" />
+  </ItemGroup>
+</Project>

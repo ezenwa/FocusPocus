@@ -1,0 +1,106 @@
+<ui:FluentWindow x:Class="SpotDot.Views.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+        Title="FocusPocus" Width="780" Height="760"
+        WindowStartupLocation="CenterScreen" ResizeMode="NoResize"
+        WindowCornerPreference="Round" ExtendsContentIntoTitleBar="True"
+        Background="{DynamicResource ApplicationBackgroundBrush}">
+  <Grid>
+    <Grid.RowDefinitions><RowDefinition Height="48"/><RowDefinition Height="*"/></Grid.RowDefinitions>
+    <Grid.ColumnDefinitions><ColumnDefinition Width="210"/><ColumnDefinition Width="*"/></Grid.ColumnDefinitions>
+
+    <ui:TitleBar Grid.Row="0" Grid.ColumnSpan="2" Title="FocusPocus" ShowMinimize="True" ShowMaximize="False" ShowClose="True"
+                 MouseLeftButtonDown="TitleBarMouseDown"/>
+
+    <Border Grid.Row="1" Grid.Column="0" Background="{DynamicResource LayerFillColorDefaultBrush}"
+            BorderBrush="{DynamicResource CardStrokeColorDefaultBrush}" BorderThickness="0,0,1,0">
+      <DockPanel Margin="16,22">
+        <StackPanel DockPanel.Dock="Top">
+          <Grid Margin="6,0,6,28"><Grid.ColumnDefinitions><ColumnDefinition Width="44"/><ColumnDefinition/></Grid.ColumnDefinitions>
+            <Image Width="36" Height="36" Source="/Assets/FocusPocus.png"/>
+<StackPanel Grid.Column="1" VerticalAlignment="Center"><TextBlock Text="FocusPocus" FontSize="18" FontWeight="SemiBold"/><TextBlock Text="1.1.13" Foreground="{StaticResource SpotMutedBrush}" FontSize="11"/></StackPanel>
+          </Grid>
+          <ui:Button x:Name="NavSpot" Content="◉   Spotlight" HorizontalContentAlignment="Left" Margin="0,2" Click="NavSpotClicked"/>
+          <ui:Button x:Name="NavInput" Content="⌁   Input effects" HorizontalContentAlignment="Left" Margin="0,2" Click="NavInputClicked"/>
+          <ui:Button x:Name="NavShortcuts" Content="⌨   Shortcuts" HorizontalContentAlignment="Left" Margin="0,2" Click="NavShortcutsClicked"/>
+          <ui:Button x:Name="NavSettings" Content="⚙   Settings" HorizontalContentAlignment="Left" Margin="0,2" Click="NavSettingsClicked"/>
+        </StackPanel>
+        <StackPanel DockPanel.Dock="Bottom" VerticalAlignment="Bottom">
+          <ui:Button x:Name="AboutButton" Content="ⓘ   About" HorizontalContentAlignment="Left" Appearance="Secondary" Click="AboutClicked"/>
+        </StackPanel>
+      </DockPanel>
+    </Border>
+
+    <Grid Grid.Row="1" Grid.Column="1" Margin="32,24,32,24">
+      <Grid.RowDefinitions><RowDefinition Height="Auto"/><RowDefinition Height="*"/><RowDefinition Height="Auto"/></Grid.RowDefinitions>
+      <Grid>
+        <StackPanel><TextBlock x:Name="PageTitle" Text="Spotlight" FontSize="28" FontWeight="SemiBold"/><TextBlock x:Name="Subtitle" Foreground="{StaticResource SpotMutedBrush}" FontSize="14" Margin="0,4,0,20"/></StackPanel>
+        <ComboBox x:Name="LanguageBox" HorizontalAlignment="Right" VerticalAlignment="Top" Width="120" SelectionChanged="LanguageChanged"><ComboBoxItem Tag="es">Español</ComboBoxItem><ComboBoxItem Tag="en">English</ComboBoxItem></ComboBox>
+      </Grid>
+
+      <Grid Grid.Row="1">
+          <StackPanel x:Name="SpotPage">
+            <Border Style="{StaticResource SectionCard}"><StackPanel>
+              <CheckBox x:Name="SpotEnabled" FontSize="16" FontWeight="SemiBold" Click="LiveChanged"/>
+              <DockPanel><TextBlock x:Name="SizeLabel" Style="{StaticResource FieldLabel}"/><TextBlock x:Name="SizeValueLabel" HorizontalAlignment="Right" Foreground="{StaticResource SpotMutedBrush}" Margin="8,10,0,4"/></DockPanel><Slider x:Name="SizeSlider" Minimum="100" Maximum="800" TickFrequency="10" IsSnapToTickEnabled="True" ValueChanged="LiveChanged"/>
+              <DockPanel><TextBlock x:Name="FeatherLabel" Style="{StaticResource FieldLabel}"/><TextBlock x:Name="FeatherValueLabel" HorizontalAlignment="Right" Foreground="{StaticResource SpotMutedBrush}" Margin="8,10,0,4"/></DockPanel><Slider x:Name="FeatherSlider" Minimum="10" Maximum="220" TickFrequency="5" IsSnapToTickEnabled="True" ValueChanged="LiveChanged"/>
+            </StackPanel></Border>
+            <Border Style="{StaticResource SectionCard}"><StackPanel>
+              <TextBlock Text="Overlay" Style="{StaticResource SectionHeading}"/>
+              <Grid><Grid.ColumnDefinitions><ColumnDefinition/><ColumnDefinition Width="20"/><ColumnDefinition/></Grid.ColumnDefinitions>
+                <StackPanel>
+                  <TextBlock x:Name="ColorLabel" Style="{StaticResource FieldLabel}"/>
+                  <TextBox x:Name="ColorBox" TextChanged="LiveChanged"/>
+                  <Grid Margin="0,8,0,0"><Grid.ColumnDefinitions><ColumnDefinition Width="36"/><ColumnDefinition/></Grid.ColumnDefinitions>
+                    <Border x:Name="ColorPreview" Width="30" Height="30" HorizontalAlignment="Left" CornerRadius="6" BorderBrush="#88FFFFFF" BorderThickness="1"/>
+                    <ui:Button x:Name="ColorPickerButton" Grid.Column="1" HorizontalAlignment="Stretch" Appearance="Secondary" Click="ChooseColorClicked"/>
+                  </Grid>
+                </StackPanel>
+                <StackPanel Grid.Column="2">
+                  <DockPanel>
+                    <TextBlock x:Name="OpacityLabel" Style="{StaticResource FieldLabel}"/>
+                    <TextBlock x:Name="OpacityValueLabel" HorizontalAlignment="Right" Foreground="{StaticResource SpotMutedBrush}" Margin="8,10,0,4"/>
+                  </DockPanel>
+                  <Slider x:Name="OpacitySlider" Minimum="0" Maximum="100" TickFrequency="1" IsSnapToTickEnabled="True" ValueChanged="LiveChanged"/>
+                </StackPanel>
+              </Grid>
+            </StackPanel></Border>
+          </StackPanel>
+
+          <StackPanel x:Name="InputPage" Visibility="Collapsed">
+            <Border Style="{StaticResource SectionCard}"><StackPanel>
+              <TextBlock x:Name="EffectsTitle" Style="{StaticResource SectionHeading}"/>
+              <CheckBox x:Name="ClicksEnabled" Click="LiveChanged"/><CheckBox x:Name="KeysEnabled" Click="LiveChanged"/><CheckBox x:Name="ShortcutsOnly" Margin="20,0,0,0" Click="LiveChanged"/><CheckBox x:Name="SoundEnabled" Click="LiveChanged"/>
+              <DockPanel><TextBlock x:Name="KeySizeLabel" Style="{StaticResource FieldLabel}"/><TextBlock x:Name="KeySizeValueLabel" HorizontalAlignment="Right" Foreground="{StaticResource SpotMutedBrush}" Margin="8,10,0,4"/></DockPanel><Slider x:Name="KeySizeSlider" Minimum="14" Maximum="48" TickFrequency="1" IsSnapToTickEnabled="True" ValueChanged="LiveChanged"/>
+              <Border Background="#2635007F" BorderBrush="#66FFDD55" BorderThickness="1" CornerRadius="8" Padding="12" Margin="0,10,0,0"><TextBlock x:Name="PrivacyText" Foreground="{StaticResource SpotMutedBrush}" TextWrapping="Wrap"/></Border>
+            </StackPanel></Border>
+          </StackPanel>
+
+          <StackPanel x:Name="ShortcutsPage" Visibility="Collapsed">
+            <Border Style="{StaticResource SectionCard}"><StackPanel>
+              <TextBlock x:Name="ShortcutsTitle" Style="{StaticResource SectionHeading}"/>
+              <Grid Margin="0,12,0,0"><Grid.ColumnDefinitions><ColumnDefinition Width="180"/><ColumnDefinition/></Grid.ColumnDefinitions><Grid.RowDefinitions><RowDefinition/><RowDefinition/><RowDefinition/><RowDefinition/><RowDefinition/><RowDefinition/><RowDefinition/></Grid.RowDefinitions>
+                <TextBlock x:Name="SpotShortcutLabel" VerticalAlignment="Center"/><TextBox x:Name="SpotShortcut" Grid.Column="1" PreviewKeyDown="CaptureShortcut"/>
+                <TextBlock x:Name="ClickShortcutLabel" Grid.Row="1" VerticalAlignment="Center"/><TextBox x:Name="ClickShortcut" Grid.Row="1" Grid.Column="1" Margin="0,10,0,0" PreviewKeyDown="CaptureShortcut"/>
+                <TextBlock x:Name="KeyShortcutLabel" Grid.Row="2" VerticalAlignment="Center"/><TextBox x:Name="KeyShortcut" Grid.Row="2" Grid.Column="1" Margin="0,10,0,0" PreviewKeyDown="CaptureShortcut"/>
+                <TextBlock x:Name="IncreaseSpotSizeShortcutLabel" Grid.Row="3" VerticalAlignment="Center"/><TextBox x:Name="IncreaseSpotSizeShortcut" Grid.Row="3" Grid.Column="1" Margin="0,10,0,0" PreviewKeyDown="CaptureShortcut"/>
+                <TextBlock x:Name="DecreaseSpotSizeShortcutLabel" Grid.Row="4" VerticalAlignment="Center"/><TextBox x:Name="DecreaseSpotSizeShortcut" Grid.Row="4" Grid.Column="1" Margin="0,10,0,0" PreviewKeyDown="CaptureShortcut"/>
+                <TextBlock x:Name="DecreaseOverlayOpacityShortcutLabel" Grid.Row="5" VerticalAlignment="Center"/><TextBox x:Name="DecreaseOverlayOpacityShortcut" Grid.Row="5" Grid.Column="1" Margin="0,10,0,0" PreviewKeyDown="CaptureShortcut"/>
+                <TextBlock x:Name="IncreaseOverlayOpacityShortcutLabel" Grid.Row="6" VerticalAlignment="Center"/><TextBox x:Name="IncreaseOverlayOpacityShortcut" Grid.Row="6" Grid.Column="1" Margin="0,10,0,0" PreviewKeyDown="CaptureShortcut"/>
+              </Grid>
+            </StackPanel></Border>
+          </StackPanel>
+
+          <StackPanel x:Name="SettingsPage" Visibility="Collapsed">
+            <Border Style="{StaticResource SectionCard}"><StackPanel>
+              <TextBlock x:Name="BehaviorTitle" Style="{StaticResource SectionHeading}"/>
+              <CheckBox x:Name="StartupEnabled"/><CheckBox x:Name="TrayEnabled"/>
+            </StackPanel></Border>
+          </StackPanel>
+      </Grid>
+
+      <DockPanel Grid.Row="2" Margin="0,14,0,0"><ui:Button x:Name="ApplyButton" Content="Apply" DockPanel.Dock="Right" HorizontalAlignment="Right" Appearance="Primary" Click="ApplyClicked"/></DockPanel>
+    </Grid>
+  </Grid>
+</ui:FluentWindow>
