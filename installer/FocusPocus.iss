@@ -1,5 +1,5 @@
 #define MyAppName "FocusPocus"
-#define MyAppVersion "2.1.0"
+#define MyAppVersion "2.1.1"
 #define MyAppPublisher "Joshua Ezenwa"
 #define MyAppExeName "FocusPocus.exe"
 #define MyEngineExeName "FocusPocus.Engine.exe"

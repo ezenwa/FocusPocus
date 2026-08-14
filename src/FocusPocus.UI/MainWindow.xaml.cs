@@ -92,7 +92,7 @@ public sealed partial class MainWindow : Window
         brand.Children.Add(BrandLogo);
         var brandText = new StackPanel { VerticalAlignment = VerticalAlignment.Center };
         brandText.Children.Add(new TextBlock { Text = "FocusPocus", FontSize = 20, FontWeight = Microsoft.UI.Text.FontWeights.SemiBold });
-        brandText.Children.Add(new TextBlock { Text = "2.1.0", FontSize = 12, Foreground = muted });
+        brandText.Children.Add(new TextBlock { Text = "2.1.1", FontSize = 12, Foreground = muted });
         brand.Children.Add(brandText);
         brandBlock.Children.Add(brand);
         BrandSlogan.Margin = new Thickness(0, 10, 0, 0);
@@ -451,7 +451,7 @@ public sealed partial class MainWindow : Window
         try
         {
             using var client = new HttpClient();
-            client.DefaultRequestHeaders.UserAgent.ParseAdd("FocusPocus/2.1.0");
+            client.DefaultRequestHeaders.UserAgent.ParseAdd("FocusPocus/2.1.1");
             client.DefaultRequestHeaders.Accept.ParseAdd("application/vnd.github+json");
             using var response = await client.GetAsync("https://api.github.com/repos/ezenwa/FocusPocus/releases/latest");
             response.EnsureSuccessStatusCode();
@@ -459,7 +459,7 @@ public sealed partial class MainWindow : Window
             var root = document.RootElement;
             var tag = root.GetProperty("tag_name").GetString() ?? "0.0.0";
             var releaseUrl = root.GetProperty("html_url").GetString() ?? "https://github.com/ezenwa/FocusPocus/releases";
-            var updateAvailable = Version.TryParse(tag.TrimStart('v', 'V'), out var latest) && latest > new Version(2, 1, 0);
+            var updateAvailable = Version.TryParse(tag.TrimStart('v', 'V'), out var latest) && latest > new Version(2, 1, 1);
             if (!updateAvailable) { await ShowAlertAsync(T("UpToDate")); return; }
             var dialog = new ContentDialog { XamlRoot = RootGrid.XamlRoot, Title = $"FocusPocus {tag}", Content = T("UpdateAvailable"), PrimaryButtonText = T("OpenRelease"), CloseButtonText = T("Close"), DefaultButton = ContentDialogButton.Primary };
             if (await dialog.ShowAsync() == ContentDialogResult.Primary) await Launcher.LaunchUriAsync(new Uri(releaseUrl));
@@ -479,7 +479,7 @@ public sealed partial class MainWindow : Window
         panel.Children.Add(new Image { Source = new Microsoft.UI.Xaml.Media.Imaging.BitmapImage(new Uri("ms-appx:///Assets/FocusPocus.png")), Width = 76, Height = 76, HorizontalAlignment = HorizontalAlignment.Left });
         panel.Children.Add(new TextBlock { Text = "FocusPocus", FontSize = 28, FontWeight = Microsoft.UI.Text.FontWeights.SemiBold, Foreground = (Brush)Application.Current.Resources["FocusAccentBrush"] });
         panel.Children.Add(new TextBlock { Text = T("Subtitle"), Foreground = (Brush)Application.Current.Resources["MutedBrush"] });
-        panel.Children.Add(new TextBlock { Text = $"{T("Version")}: 2.1.0", Margin = new Thickness(0, 8, 0, 0) });
+        panel.Children.Add(new TextBlock { Text = $"{T("Version")}: 2.1.1", Margin = new Thickness(0, 8, 0, 0) });
         panel.Children.Add(new TextBlock { Text = $"{T("Author")}: Joshua Ezenwa", Foreground = (Brush)Application.Current.Resources["MutedBrush"] });
         var dialog = new ContentDialog { XamlRoot = RootGrid.XamlRoot, Title = T("About"), Content = panel, PrimaryButtonText = T("CheckUpdates"), CloseButtonText = T("Close"), DefaultButton = ContentDialogButton.Close };
         if (await dialog.ShowAsync() == ContentDialogResult.Primary) await CheckUpdatesAsync();

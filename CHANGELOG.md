@@ -4,6 +4,8 @@ All notable changes to FocusPocus are documented here.
 
 ## [Unreleased]
 
+## [2.1.1] - 2026-08-14
+
 ### Added
 
 - Optimized animated usage preview in the project documentation.
