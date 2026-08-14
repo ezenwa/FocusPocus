@@ -41,5 +41,10 @@ public sealed class SettingsService
         }
     }
 
-    public void Save(AppSettings settings) => File.WriteAllText(_path, JsonSerializer.Serialize(settings, JsonOptions));
+    public void Save(AppSettings settings)
+    {
+        var temporary = _path + ".tmp";
+        File.WriteAllText(temporary, JsonSerializer.Serialize(settings, JsonOptions));
+        File.Move(temporary, _path, true);
+    }
 }

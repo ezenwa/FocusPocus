@@ -12,6 +12,12 @@
   · <a href="CHANGELOG.md">Changelog</a>
 </p>
 
+## See it in action
+
+<p align="center">
+  <img src="docs/images/focuspocus-demo.gif" alt="FocusPocus spotlight, click effects, shortcuts, and settings demonstration" width="800">
+</p>
+
 ## Preview
 
 <p align="center">

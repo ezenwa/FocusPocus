@@ -2,6 +2,19 @@
 
 All notable changes to FocusPocus are documented here.
 
+## [Unreleased]
+
+### Added
+
+- Optimized animated usage preview in the project documentation.
+- Restore-defaults action in the behavior settings.
+- Checked tray-menu controls for spotlight, clicks, and keystrokes.
+
+### Fixed
+
+- Settings now stay synchronized between the WinUI interface, tray menu, engine, and global shortcuts.
+- Settings writes are atomic to prevent partial reads while both processes are running.
+
 ## [2.1.0] - 2026-08-13
 
 ### Added

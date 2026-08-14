@@ -19,7 +19,9 @@ namespace FocusPocus;
 public sealed partial class MainWindow : Window
 {
     private readonly SettingsService _storage = new();
+    private readonly DispatcherTimer _syncTimer = new() { Interval = TimeSpan.FromMilliseconds(400) };
     private AppSettings _settings;
+    private DateTime _settingsWriteTimeUtc;
     private bool _loading = true;
     private NavigationViewItem? _currentNav;
     private AppWindow? _appWindow;
@@ -29,13 +31,13 @@ public sealed partial class MainWindow : Window
     private readonly Border TitleLogo = new(), BrandLogo = new(), ColorPreview = new();
     private readonly NavigationView NavView = new();
     private readonly NavigationViewItem SpotNav = new() { Tag = "spot" }, EffectsNav = new() { Tag = "effects" }, ShortcutsNav = new() { Tag = "shortcuts" }, BehaviorNav = new() { Tag = "behavior" }, AboutNav = new() { Tag = "about" };
-    private readonly TextBlock PageTitle = new(), SubtitleText = new(), BrandSlogan = new(), SpotEnabledHeader = new(), SizeLabel = new(), SizeValue = new(), FeatherLabel = new(), FeatherValue = new(), OverlayTitle = new(), ColorLabel = new(), OpacityLabel = new(), OpacityValue = new(), EffectsTitle = new(), ClicksLabel = new(), KeysLabel = new(), OnlyShortcutsLabel = new(), SoundLabel = new(), KeySizeLabel = new(), KeySizeValue = new(), ShortcutsTitle = new(), SpotShortcutLabel = new(), ClickShortcutLabel = new(), KeyShortcutLabel = new(), IncreaseSpotLabel = new(), DecreaseSpotLabel = new(), DecreaseOpacityLabel = new(), IncreaseOpacityLabel = new(), BehaviorTitle = new(), StartupLabel = new(), TrayLabel = new();
+    private readonly TextBlock PageTitle = new(), SubtitleText = new(), BrandSlogan = new(), SpotEnabledHeader = new(), SizeLabel = new(), SizeValue = new(), FeatherLabel = new(), FeatherValue = new(), OverlayTitle = new(), ColorLabel = new(), OpacityLabel = new(), OpacityValue = new(), EffectsTitle = new(), ClicksLabel = new(), KeysLabel = new(), OnlyShortcutsLabel = new(), SoundLabel = new(), KeySizeLabel = new(), KeySizeValue = new(), ShortcutsTitle = new(), SpotShortcutLabel = new(), ClickShortcutLabel = new(), KeyShortcutLabel = new(), IncreaseSpotLabel = new(), DecreaseSpotLabel = new(), DecreaseOpacityLabel = new(), IncreaseOpacityLabel = new(), BehaviorTitle = new(), StartupLabel = new(), TrayLabel = new(), ResetDescription = new();
     private readonly ComboBox LanguageBox = new();
     private readonly StackPanel SpotPage = new(), EffectsPage = new(), ShortcutsPage = new(), BehaviorPage = new();
     private readonly ToggleSwitch SpotEnabled = new(), ClicksEnabled = new(), KeysEnabled = new(), ShortcutsOnly = new(), SoundEnabled = new(), StartupEnabled = new(), TrayEnabled = new();
     private readonly Slider SizeSlider = new() { Minimum = 100, Maximum = 800, StepFrequency = 10 }, FeatherSlider = new() { Minimum = 10, Maximum = 220, StepFrequency = 5 }, KeySizeSlider = new() { Minimum = 14, Maximum = 48, StepFrequency = 1 }, OpacitySlider = new() { Minimum = 0, Maximum = 100, StepFrequency = 1 };
     private readonly TextBox ColorBox = new(), SpotShortcut = new(), ClickShortcut = new(), KeyShortcut = new(), IncreaseSpotShortcut = new(), DecreaseSpotShortcut = new(), DecreaseOpacityShortcut = new(), IncreaseOpacityShortcut = new();
-    private readonly Button ChooseColorButton = new(), ApplyButton = new() { MinWidth = 112 };
+    private readonly Button ChooseColorButton = new(), ResetButton = new() { MinWidth = 220 };
     private readonly ColorPicker OverlayColorPicker = new() { IsAlphaEnabled = false, IsAlphaSliderVisible = false, IsAlphaTextInputVisible = false };
     private readonly InfoBar PrivacyBar = new() { IsOpen = true, IsClosable = false, Severity = InfoBarSeverity.Informational }, StartupInfo = new() { IsOpen = true, IsClosable = false, Severity = InfoBarSeverity.Warning };
 
@@ -47,9 +49,13 @@ public sealed partial class MainWindow : Window
         TitleLogo.Background = new ImageBrush { ImageSource = new BitmapImage(logo), Stretch = Stretch.Uniform };
         BrandLogo.Background = new ImageBrush { ImageSource = new BitmapImage(logo), Stretch = Stretch.Uniform };
         _settings = _storage.Load();
+        _settingsWriteTimeUtc = _storage.LastWriteTimeUtc;
         ConfigureWindow();
         LoadValues();
         _currentNav = SpotNav;
+        _syncTimer.Tick += SyncExternalSettings;
+        _syncTimer.Start();
+        Closed += (_, _) => _syncTimer.Stop();
     }
 
     private void BuildInterface()
@@ -160,6 +166,7 @@ public sealed partial class MainWindow : Window
     private void BuildBehaviorPage(Brush accent)
     {
         var panel = new StackPanel(); StyleHeading(BehaviorTitle, accent); panel.Children.Add(BehaviorTitle); panel.Children.Add(ToggleRow(StartupLabel, StartupEnabled)); panel.Children.Add(ToggleRow(TrayLabel, TrayEnabled)); StartupInfo.Margin = new Thickness(0, 10, 0, 0); panel.Children.Add(StartupInfo); BehaviorPage.Children.Add(Card(panel));
+        var reset = new StackPanel { Spacing = 12 }; ResetDescription.TextWrapping = TextWrapping.Wrap; reset.Children.Add(ResetDescription); ResetButton.HorizontalAlignment = HorizontalAlignment.Left; ResetButton.Click += ResetDefaultsClicked; reset.Children.Add(ResetButton); BehaviorPage.Children.Add(Card(reset));
     }
 
     private void ConfigureWindow()
@@ -247,7 +254,11 @@ public sealed partial class MainWindow : Window
         ("Startup", "en") => "Start with Windows",
         ("Tray", "en") => "Keep running in the system tray",
         ("StartupInfo", "en") => "Windows startup launches the engine minimized in the system tray. The settings window stays closed.",
-        ("Apply", "en") => "Apply",
+        ("ResetDefaults", "en") => "Restore default settings",
+        ("ResetDescription", "en") => "Restore spotlight, effects, shortcuts, overlay, and behavior settings to their original values.",
+        ("ResetConfirmTitle", "en") => "Restore default settings?",
+        ("ResetConfirmMessage", "en") => "Your current settings will be replaced. The interface language will be preserved.",
+        ("Reset", "en") => "Restore",
         ("About", "en") => "About",
         ("InvalidColor", "en") => "Enter a valid hexadecimal color in #RRGGBB format.",
         ("InvalidShortcuts", "en") => "All shortcuts must be valid and different.",
@@ -290,7 +301,11 @@ public sealed partial class MainWindow : Window
         ("Startup", _) => "Iniciar con Windows",
         ("Tray", _) => "Mantener en la bandeja del sistema",
         ("StartupInfo", _) => "El inicio con Windows ejecuta el motor minimizado en la bandeja. La ventana de configuración permanece cerrada.",
-        ("Apply", _) => "Aplicar",
+        ("ResetDefaults", _) => "Restablecer valores predeterminados",
+        ("ResetDescription", _) => "Restaura el foco, los efectos, los atajos, el overlay y el comportamiento a sus valores originales.",
+        ("ResetConfirmTitle", _) => "¿Restablecer los valores predeterminados?",
+        ("ResetConfirmMessage", _) => "La configuración actual será reemplazada. Se conservará el idioma de la interfaz.",
+        ("Reset", _) => "Restablecer",
         ("About", _) => "Acerca de",
         ("InvalidColor", _) => "Introduce un color hexadecimal válido con formato #RRGGBB.",
         ("InvalidShortcuts", _) => "Todos los atajos deben ser válidos y diferentes.",
@@ -315,7 +330,7 @@ public sealed partial class MainWindow : Window
         SpotEnabledHeader.Text = T("EnableFocus"); SizeLabel.Text = T("FocusSize"); FeatherLabel.Text = T("Feather"); OverlayTitle.Text = T("Overlay"); ColorLabel.Text = T("Color"); ChooseColorButton.Content = T("ChooseColor"); OpacityLabel.Text = T("Opacity");
         EffectsTitle.Text = T("Effects"); ClicksLabel.Text = T("Clicks"); KeysLabel.Text = T("Keys"); OnlyShortcutsLabel.Text = T("OnlyShortcuts"); SoundLabel.Text = T("Sound"); KeySizeLabel.Text = T("KeySize"); PrivacyBar.Message = T("Privacy");
         ShortcutsTitle.Text = T("Shortcuts"); SpotShortcutLabel.Text = T("ToggleFocus"); ClickShortcutLabel.Text = T("ToggleClicks"); KeyShortcutLabel.Text = T("ToggleKeys"); IncreaseSpotLabel.Text = T("IncreaseFocus"); DecreaseSpotLabel.Text = T("DecreaseFocus"); DecreaseOpacityLabel.Text = T("DecreaseOpacity"); IncreaseOpacityLabel.Text = T("IncreaseOpacity");
-        BehaviorTitle.Text = T("Behavior"); StartupLabel.Text = T("Startup"); TrayLabel.Text = T("Tray"); StartupInfo.Message = T("StartupInfo"); ApplyButton.Content = T("Apply");
+        BehaviorTitle.Text = T("Behavior"); StartupLabel.Text = T("Startup"); TrayLabel.Text = T("Tray"); StartupInfo.Message = T("StartupInfo"); ResetDescription.Text = T("ResetDescription"); ResetButton.Content = T("ResetDefaults");
         foreach (var toggle in new[] { SpotEnabled, ClicksEnabled, KeysEnabled, ShortcutsOnly, SoundEnabled, StartupEnabled, TrayEnabled })
         {
             toggle.OnContent = T("Activated");
@@ -348,6 +363,15 @@ public sealed partial class MainWindow : Window
     {
         if (_loading) return;
         Pull(); UpdateValues(); Save();
+    }
+
+    private void SyncExternalSettings(object? sender, object e)
+    {
+        var writeTime = _storage.LastWriteTimeUtc;
+        if (_loading || writeTime == DateTime.MinValue || writeTime == _settingsWriteTimeUtc) return;
+        _settings = _storage.Load();
+        _settingsWriteTimeUtc = writeTime;
+        LoadValues();
     }
 
     private void Pull()
@@ -406,16 +430,21 @@ public sealed partial class MainWindow : Window
 
     private static bool IsDown(VirtualKey key) => (InputKeyboardSource.GetKeyStateForCurrentThread(key) & CoreVirtualKeyStates.Down) != 0;
 
-    private async void ApplyClicked(object sender, RoutedEventArgs e)
+    private async void ResetDefaultsClicked(object sender, RoutedEventArgs e)
     {
-        Pull();
-        if (!TryParseColor(ColorBox.Text, out _)) { await ShowAlertAsync(T("InvalidColor")); return; }
-        var shortcuts = new[] { SpotShortcut.Text, ClickShortcut.Text, KeyShortcut.Text, IncreaseSpotShortcut.Text, DecreaseSpotShortcut.Text, DecreaseOpacityShortcut.Text, IncreaseOpacityShortcut.Text };
-        if (shortcuts.Any(string.IsNullOrWhiteSpace) || shortcuts.Distinct(StringComparer.OrdinalIgnoreCase).Count() != shortcuts.Length) { await ShowAlertAsync(T("InvalidShortcuts")); return; }
+        var dialog = new ContentDialog { XamlRoot = RootGrid.XamlRoot, Title = T("ResetConfirmTitle"), Content = T("ResetConfirmMessage"), PrimaryButtonText = T("Reset"), CloseButtonText = T("Close"), DefaultButton = ContentDialogButton.Close };
+        if (await dialog.ShowAsync() != ContentDialogResult.Primary) return;
+        var language = _settings.Language;
+        _settings = new AppSettings { Language = language };
         Save();
+        LoadValues();
     }
 
-    private void Save() => _storage.Save(_settings);
+    private void Save()
+    {
+        _storage.Save(_settings);
+        _settingsWriteTimeUtc = _storage.LastWriteTimeUtc;
+    }
 
     private async Task CheckUpdatesAsync()
     {

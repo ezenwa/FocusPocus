@@ -6,6 +6,7 @@ public sealed class SettingsService
 {
     private static readonly JsonSerializerOptions Options = new() { WriteIndented = true };
     private readonly string _path;
+    public DateTime LastWriteTimeUtc => File.Exists(_path) ? File.GetLastWriteTimeUtc(_path) : DateTime.MinValue;
 
     public SettingsService()
     {
