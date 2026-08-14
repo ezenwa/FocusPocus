@@ -16,4 +16,4 @@ jobs:
       - name: Build WinUI frontend
         run: dotnet build .\src\FocusPocus.UI\FocusPocus.UI.csproj -c Release
       - name: Build overlay engine
-        run: dotnet build .\src\SpotDot\SpotDot.csproj -c Release
+        run: dotnet build .\src\FocusPocus.Engine\FocusPocus.Engine.csproj -c Release

@@ -20,7 +20,7 @@ ArchitecturesAllowed=x64compatible
 ArchitecturesInstallIn64BitMode=x64compatible
 PrivilegesRequired=lowest
 UninstallDisplayIcon={app}\{#MyAppExeName}
-SetupIconFile=..\src\SpotDot\Assets\FocusPocus.ico
+SetupIconFile=..\src\FocusPocus.Engine\Assets\FocusPocus.ico
 
 [Languages]
 Name: "english"; MessagesFile: "compiler:Default.isl"
@@ -30,16 +30,7 @@ Name: "spanish"; MessagesFile: "compiler:Languages\Spanish.isl"
 Name: "startup"; Description: "{cm:AutoStartProgram,{#MyAppName}}"; GroupDescription: "{cm:AdditionalIcons}"; Flags: unchecked
 
 [Files]
-Source: "..\publish-winui-203\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
-
-[InstallDelete]
-Type: files; Name: "{app}\SpotDot.exe"
-Type: files; Name: "{app}\SpotDot.dll"
-Type: files; Name: "{app}\SpotDot.deps.json"
-Type: files; Name: "{app}\SpotDot.runtimeconfig.json"
-Type: files; Name: "{autoprograms}\SpotDot.lnk"
-Type: files; Name: "{userstartup}\SpotDot.lnk"
-Type: files; Name: "{userstartup}\FocusPocus.lnk"
+Source: "..\publish\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
 
 [Icons]
 Name: "{autoprograms}\FocusPocus"; Filename: "{app}\{#MyAppExeName}"

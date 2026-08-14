@@ -1,7 +1,7 @@
 using System.Windows;
-using SpotDot.Services;
+using FocusPocus.Engine.Services;
 
-namespace SpotDot;
+namespace FocusPocus.Engine;
 
 public partial class App : System.Windows.Application
 {

@@ -1,6 +1,6 @@
 using System.Runtime.InteropServices;
 
-namespace SpotDot.Interop;
+namespace FocusPocus.Engine.Interop;
 
 internal static class NativeMethods
 {

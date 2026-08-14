@@ -9,17 +9,11 @@
     <ApplicationManifest>app.manifest</ApplicationManifest>
     <ApplicationIcon>Assets\FocusPocus.ico</ApplicationIcon>
     <AssemblyName>FocusPocus.Engine</AssemblyName>
-    <RootNamespace>SpotDot</RootNamespace>
+    <RootNamespace>FocusPocus.Engine</RootNamespace>
     <Version>2.1.0</Version>
   </PropertyGroup>
   <ItemGroup>
     <Resource Include="Assets\FocusPocus.ico" />
-    <Resource Include="Assets\FocusPocus.png" />
-    <Resource Include="Assets\FocusPocus-Mark.png" />
-    <Content Include="Assets\FocusPocus-Tray.ico" CopyToOutputDirectory="PreserveNewest" />
-  </ItemGroup>
-  <ItemGroup>
-    <Page Remove="Views\MainWindow.xaml;Views\AboutWindow.xaml;Views\AlertWindow.xaml" />
-    <Compile Remove="Views\MainWindow.xaml.cs;Views\AboutWindow.xaml.cs;Views\AlertWindow.xaml.cs" />
+    <Content Include="Assets\FocusPocus.ico" CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>
 </Project>

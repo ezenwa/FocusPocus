@@ -76,6 +76,37 @@ FocusPocus uses two cooperating processes:
 
 This split lets Windows startup launch only the engine in the tray while the settings window stays closed.
 
+```mermaid
+flowchart LR
+    User([User])
+    Input[Windows pointer<br/>and keyboard input]
+    Startup[Windows startup]
+    Releases[(GitHub Releases API)]
+
+    subgraph FocusPocus
+        UI[FocusPocus.exe<br/>WinUI 3 settings]
+        Settings[(%APPDATA%\FocusPocus<br/>settings.json)]
+
+        subgraph Engine[FocusPocus.Engine.exe]
+            Controller[App controller and<br/>settings synchronization]
+            Tray[System tray and<br/>global shortcuts]
+            Hooks[Low-level<br/>input hooks]
+            Overlay[WPF spotlight and<br/>input effects overlay]
+        end
+    end
+
+    User --> UI
+    UI <--> Settings
+    UI -. Check for updates .-> Releases
+    Settings --> Controller
+    Startup --> Controller
+    User --> Tray
+    Input --> Hooks
+    Tray --> Controller
+    Hooks --> Controller
+    Controller --> Overlay
+```
+
 ## Build from source
 
 Prerequisites:
@@ -87,7 +118,7 @@ Prerequisites:
 git clone https://github.com/ezenwa/FocusPocus.git
 cd FocusPocus
 dotnet build .\src\FocusPocus.UI\FocusPocus.UI.csproj -c Release
-dotnet build .\src\SpotDot\SpotDot.csproj -c Release
+dotnet build .\src\FocusPocus.Engine\FocusPocus.Engine.csproj -c Release
 ```
 
 To create the installer:

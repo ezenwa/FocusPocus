@@ -2,7 +2,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.0.31903.59
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SpotDot", "src\SpotDot\SpotDot.csproj", "{5D7FD058-9B7F-4B91-9AF1-68B25C5FA4A2}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FocusPocus.UI", "src\FocusPocus.UI\FocusPocus.UI.csproj", "{CBE0811A-B4CA-4C53-8DA1-D80E06D6763E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FocusPocus.Engine", "src\FocusPocus.Engine\FocusPocus.Engine.csproj", "{5D7FD058-9B7F-4B91-9AF1-68B25C5FA4A2}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -10,6 +12,10 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{CBE0811A-B4CA-4C53-8DA1-D80E06D6763E}.Debug|Any CPU.ActiveCfg = Debug|x64
+		{CBE0811A-B4CA-4C53-8DA1-D80E06D6763E}.Debug|Any CPU.Build.0 = Debug|x64
+		{CBE0811A-B4CA-4C53-8DA1-D80E06D6763E}.Release|Any CPU.ActiveCfg = Release|x64
+		{CBE0811A-B4CA-4C53-8DA1-D80E06D6763E}.Release|Any CPU.Build.0 = Release|x64
 		{5D7FD058-9B7F-4B91-9AF1-68B25C5FA4A2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{5D7FD058-9B7F-4B91-9AF1-68B25C5FA4A2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5D7FD058-9B7F-4B91-9AF1-68B25C5FA4A2}.Release|Any CPU.ActiveCfg = Release|Any CPU

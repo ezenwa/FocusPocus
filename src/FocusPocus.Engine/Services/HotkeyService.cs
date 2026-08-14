@@ -1,6 +1,6 @@
 using System.Windows.Input;
 
-namespace SpotDot.Services;
+namespace FocusPocus.Engine.Services;
 
 public static class HotkeyService
 {

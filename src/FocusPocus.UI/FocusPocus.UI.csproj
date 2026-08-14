@@ -6,7 +6,7 @@
     <RootNamespace>FocusPocus</RootNamespace>
     <AssemblyName>FocusPocus</AssemblyName>
     <ApplicationManifest>app.manifest</ApplicationManifest>
-    <ApplicationIcon>..\SpotDot\Assets\FocusPocus.ico</ApplicationIcon>
+    <ApplicationIcon>..\FocusPocus.Engine\Assets\FocusPocus.ico</ApplicationIcon>
     <UseWinUI>true</UseWinUI>
     <WindowsPackageType>None</WindowsPackageType>
     <WindowsAppSDKSelfContained>true</WindowsAppSDKSelfContained>
@@ -21,8 +21,8 @@
     <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.8.250907003" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="..\SpotDot\Assets\FocusPocus.png" Link="Assets\FocusPocus.png" CopyToOutputDirectory="PreserveNewest" />
-    <Content Include="..\SpotDot\Assets\FocusPocus.ico" Link="Assets\FocusPocus.ico" CopyToOutputDirectory="PreserveNewest" />
+    <Content Include="..\FocusPocus.Engine\Assets\FocusPocus.png" Link="Assets\FocusPocus.png" CopyToOutputDirectory="PreserveNewest" />
+    <Content Include="..\FocusPocus.Engine\Assets\FocusPocus.ico" Link="Assets\FocusPocus.ico" CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>
   <Target Name="CopyApplicationPriToPublish" AfterTargets="Publish">
     <Copy SourceFiles="$(TargetDir)$(AssemblyName).pri" DestinationFolder="$(PublishDir)" Condition="Exists('$(TargetDir)$(AssemblyName).pri')" />

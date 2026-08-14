@@ -31,13 +31,51 @@ FocusPocus es una utilidad moderna para Windows 11 que destaca el puntero, visua
 
 Los eventos del puntero y teclado se procesan localmente. FocusPocus no transmite las entradas capturadas y oculta las teclas cuando un campo de contraseña estándar de Windows tiene el foco. La búsqueda de actualizaciones solo consulta metadatos públicos de GitHub cuando el usuario pulsa el botón correspondiente.
 
+## Arquitectura
+
+FocusPocus separa la interfaz de configuración del motor que permanece activo en segundo plano:
+
+- `FocusPocus.exe`: interfaz nativa de configuración desarrollada con WinUI 3.
+- `FocusPocus.Engine.exe`: overlay WPF, hooks de entrada, atajos globales y proceso de bandeja.
+
+```mermaid
+flowchart LR
+    User([Usuario])
+    Input[Entrada de puntero<br/>y teclado de Windows]
+    Startup[Inicio de Windows]
+    Releases[(API de GitHub Releases)]
+
+    subgraph FocusPocus
+        UI[FocusPocus.exe<br/>Configuración WinUI 3]
+        Settings[(%APPDATA%\FocusPocus<br/>settings.json)]
+
+        subgraph Engine[FocusPocus.Engine.exe]
+            Controller[Controlador y<br/>sincronización de ajustes]
+            Tray[Bandeja del sistema<br/>y atajos globales]
+            Hooks[Hooks de entrada<br/>de bajo nivel]
+            Overlay[Overlay WPF de foco<br/>y efectos de entrada]
+        end
+    end
+
+    User --> UI
+    UI <--> Settings
+    UI -. Buscar actualizaciones .-> Releases
+    Settings --> Controller
+    Startup --> Controller
+    User --> Tray
+    Input --> Hooks
+    Tray --> Controller
+    Hooks --> Controller
+    Controller --> Overlay
+```
+
 ## Compilación
 
 Requiere .NET 8 SDK. Inno Setup 6 solo es necesario para generar el instalador.
 
 ```powershell
 dotnet build .\src\FocusPocus.UI\FocusPocus.UI.csproj -c Release
-dotnet build .\src\SpotDot\SpotDot.csproj -c Release
+dotnet build .\src\FocusPocus.Engine\FocusPocus.Engine.csproj -c Release
 .\build.ps1
 ```
 

@@ -1,7 +1,7 @@
 $ErrorActionPreference = 'Stop'
 $root = Split-Path -Parent $MyInvocation.MyCommand.Path
-$publishDir = "$root\publish-winui-203"
-dotnet publish "$root\src\SpotDot\SpotDot.csproj" -c Release -r win-x64 --self-contained false -o $publishDir
+$publishDir = "$root\publish"
+dotnet publish "$root\src\FocusPocus.Engine\FocusPocus.Engine.csproj" -c Release -r win-x64 --self-contained false -o $publishDir
 if ($LASTEXITCODE -ne 0) { throw "FocusPocus.Engine publish failed with exit code $LASTEXITCODE." }
 dotnet publish "$root\src\FocusPocus.UI\FocusPocus.UI.csproj" -c Release -r win-x64 --self-contained false -o $publishDir
 if ($LASTEXITCODE -ne 0) { throw "FocusPocus WinUI publish failed with exit code $LASTEXITCODE." }
@@ -11,5 +11,5 @@ $isccCandidates = @(
 )
 $iscc = $isccCandidates | Where-Object { Test-Path -LiteralPath $_ } | Select-Object -First 1
 if (-not $iscc) { throw "Inno Setup 6 was not found." }
-& $iscc "$root\installer\SpotDot.iss"
+& $iscc "$root\installer\FocusPocus.iss"
 if ($LASTEXITCODE -ne 0) { throw "Inno Setup failed with exit code $LASTEXITCODE." }

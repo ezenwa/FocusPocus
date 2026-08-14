@@ -1,9 +1,9 @@
 using System.Diagnostics;
 using System.Runtime.InteropServices;
 using System.Windows.Input;
-using SpotDot.Interop;
+using FocusPocus.Engine.Interop;
 
-namespace SpotDot.Services;
+namespace FocusPocus.Engine.Services;
 
 public sealed class InputHookService : IDisposable
 {

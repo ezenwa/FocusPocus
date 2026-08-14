@@ -1,6 +1,6 @@
 using System.Text.Json.Serialization;
 
-namespace SpotDot.Models;
+namespace FocusPocus.Engine.Models;
 
 public sealed class AppSettings
 {

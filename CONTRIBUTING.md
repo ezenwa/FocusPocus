@@ -10,7 +10,7 @@ Thanks for helping improve FocusPocus.
 
 ```powershell
 dotnet build .\src\FocusPocus.UI\FocusPocus.UI.csproj -c Release
-dotnet build .\src\SpotDot\SpotDot.csproj -c Release
+dotnet build .\src\FocusPocus.Engine\FocusPocus.Engine.csproj -c Release
 ```
 
 4. Test the WinUI interface, tray behavior, global shortcuts, overlay behavior, and Spanish/English text when relevant.

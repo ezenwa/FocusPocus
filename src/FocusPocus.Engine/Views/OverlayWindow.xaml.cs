@@ -9,11 +9,11 @@ using Canvas = System.Windows.Controls.Canvas;
 using WpfColor = System.Windows.Media.Color;
 using WpfColorConverter = System.Windows.Media.ColorConverter;
 using WpfPoint = System.Windows.Point;
-using SpotDot.Interop;
-using SpotDot.Models;
+using FocusPocus.Engine.Interop;
+using FocusPocus.Engine.Models;
 using Forms = System.Windows.Forms;
 
-namespace SpotDot.Views;
+namespace FocusPocus.Engine.Views;
 
 public partial class OverlayWindow : Window
 {

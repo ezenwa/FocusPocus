@@ -1,4 +1,4 @@
-namespace SpotDot.Services;
+namespace FocusPocus.Engine.Services;
 
 public sealed class Localizer
 {

@@ -1,4 +1,4 @@
-<Window x:Class="SpotDot.Views.OverlayWindow"
+<Window x:Class="FocusPocus.Engine.Views.OverlayWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         AllowsTransparency="True" Background="Transparent" WindowStyle="None"

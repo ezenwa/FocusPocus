@@ -1,8 +1,8 @@
 using System.IO;
 using System.Text.Json;
-using SpotDot.Models;
+using FocusPocus.Engine.Models;
 
-namespace SpotDot.Services;
+namespace FocusPocus.Engine.Services;
 
 public sealed class SettingsService
 {
@@ -16,8 +16,6 @@ public sealed class SettingsService
         var directory = Path.Combine(appData, "FocusPocus");
         Directory.CreateDirectory(directory);
         _path = Path.Combine(directory, "settings.json");
-        var previousPath = Path.Combine(appData, "SpotDot", "settings.json");
-        if (!File.Exists(_path) && File.Exists(previousPath)) File.Copy(previousPath, _path);
     }
 
     public AppSettings Load()
