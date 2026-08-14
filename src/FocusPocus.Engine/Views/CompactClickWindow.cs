@@ -5,7 +5,6 @@ using System.Windows.Media;
 using System.Windows.Media.Animation;
 using System.Windows.Shapes;
 using FocusPocus.Engine.Interop;
-using Forms = System.Windows.Forms;
 using WpfColor = System.Windows.Media.Color;
 using WpfColorConverter = System.Windows.Media.ColorConverter;
 
@@ -59,11 +58,8 @@ public sealed class CompactClickWindow : Window
         var dpi = VisualTreeHelper.GetDpi(this);
         var widthPixels = (int)Math.Ceiling(WindowSize * dpi.DpiScaleX);
         var heightPixels = (int)Math.Ceiling(WindowSize * dpi.DpiScaleY);
-        var workArea = Forms.Screen.FromPoint(new System.Drawing.Point(screenX, screenY)).WorkingArea;
-        var left = Math.Clamp(screenX - widthPixels / 2, workArea.Left, workArea.Right - widthPixels);
-        var top = Math.Clamp(screenY - heightPixels / 2, workArea.Top, workArea.Bottom - heightPixels);
         var hwnd = new WindowInteropHelper(this).Handle;
-        NativeMethods.SetWindowPos(hwnd, new nint(-1), left, top,
+        NativeMethods.SetWindowPos(hwnd, new nint(-1), screenX - widthPixels / 2, screenY - heightPixels / 2,
             widthPixels, heightPixels, NativeMethods.SWP_NOACTIVATE | NativeMethods.SWP_SHOWWINDOW);
 
         var pulseColor = (WpfColor)WpfColorConverter.ConvertFromString(color);

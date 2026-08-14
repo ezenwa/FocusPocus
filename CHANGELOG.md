@@ -18,7 +18,7 @@ All notable changes to FocusPocus are documented here.
 - Settings writes are atomic to prevent partial reads while both processes are running.
 - Upgrades no longer reuse the legacy installation directory name.
 - The dimming layer is forcibly collapsed during click-only mode, including after spotlight fade animations.
-- Click-only and keystroke-only overlays exclude the Windows taskbar from their window bounds.
+- The keystroke-only overlay excludes the Windows taskbar, while the isolated click indicator remains visible over it.
 
 ## [2.1.0] - 2026-08-13
 
