@@ -14,6 +14,7 @@ All notable changes to FocusPocus are documented here.
 
 - Settings now stay synchronized between the WinUI interface, tray menu, engine, and global shortcuts.
 - Settings writes are atomic to prevent partial reads while both processes are running.
+- Upgrades no longer reuse the legacy installation directory name.
 
 ## [2.1.0] - 2026-08-13
 

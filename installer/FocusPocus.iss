@@ -11,6 +11,7 @@ AppVersion={#MyAppVersion}
 AppPublisher={#MyAppPublisher}
 DefaultDirName={autopf}\FocusPocus
 DefaultGroupName=FocusPocus
+UsePreviousAppDir=no
 OutputDir=..\dist
 OutputBaseFilename=FocusPocus-Setup-{#MyAppVersion}
 Compression=lzma2
