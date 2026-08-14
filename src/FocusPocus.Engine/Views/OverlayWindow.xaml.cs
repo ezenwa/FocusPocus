@@ -86,19 +86,31 @@ public partial class OverlayWindow : Window
         {
             if (!IsVisible) Show();
             _timer.Start();
+            Dimmer.BeginAnimation(OpacityProperty, null);
+            Dimmer.Visibility = Visibility.Visible;
+            Dimmer.Opacity = 1;
             if (animate)
             {
-                Dimmer.Opacity = 0;
-                Dimmer.BeginAnimation(OpacityProperty, new DoubleAnimation(0, 1, TimeSpan.FromMilliseconds(260)) { EasingFunction = new CubicEase { EasingMode = EasingMode.EaseOut } });
+                Dimmer.BeginAnimation(OpacityProperty, new DoubleAnimation(0, 1, TimeSpan.FromMilliseconds(260))
+                {
+                    EasingFunction = new CubicEase { EasingMode = EasingMode.EaseOut },
+                    FillBehavior = FillBehavior.Stop
+                });
             }
-            else Dimmer.Opacity = 1;
         }
         else
         {
             _timer.Stop();
-            Dimmer.Opacity = 0;
+            HideDimmer();
             HideIfIdle();
         }
+    }
+
+    private void HideDimmer()
+    {
+        Dimmer.BeginAnimation(OpacityProperty, null);
+        Dimmer.Opacity = 0;
+        Dimmer.Visibility = Visibility.Collapsed;
     }
 
     private System.Windows.Media.Brush CreateSpotBrush(AppSettings settings)
@@ -150,6 +162,7 @@ public partial class OverlayWindow : Window
     {
         if (!IsVisible) Show();
         var compact = !_spotlightVisible;
+        if (compact) HideDimmer();
         var size = compact ? 36d : Math.Max(80d, _settings.SpotDiameter * 0.88);
         ClickPulse.Width = size;
         ClickPulse.Height = size;
