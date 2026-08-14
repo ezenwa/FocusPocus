@@ -8,12 +8,6 @@ FocusPocus es una utilidad moderna para Windows 11 que destaca el puntero, visua
 
 [Descargar la versión más reciente](https://github.com/ezenwa/FocusPocus/releases/latest) · [README en inglés](../README.md)
 
-## Así funciona
-
-<p align="center">
-  <img src="images/focuspocus-demo.gif" alt="Demostración del foco, clic y atajos globales de FocusPocus" width="100%">
-</p>
-
 ## Funciones
 
 - Foco ajustable hasta 800 px con difuminado de contorno.
