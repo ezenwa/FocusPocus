@@ -9,6 +9,7 @@ All notable changes to FocusPocus are documented here.
 - Optimized animated usage preview in the project documentation.
 - Restore-defaults action in the behavior settings.
 - Checked tray-menu controls for spotlight, clicks, and keystrokes.
+- Compact click-only indicator when the spotlight is disabled.
 
 ### Fixed
 

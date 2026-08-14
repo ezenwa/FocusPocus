@@ -149,21 +149,39 @@ public partial class OverlayWindow : Window
     public void ShowClick(bool left, int screenX, int screenY, string color)
     {
         if (!IsVisible) Show();
-        var size = Math.Max(80d, _settings.SpotDiameter * 0.88);
+        var compact = !_spotlightVisible;
+        var size = compact ? 36d : Math.Max(80d, _settings.SpotDiameter * 0.88);
         ClickPulse.Width = size;
         ClickPulse.Height = size;
         var pulseColor = (WpfColor)WpfColorConverter.ConvertFromString(color);
-        pulseColor.A = 42;
-        ClickPulse.Fill = new SolidColorBrush(pulseColor);
+        if (compact)
+        {
+            var fillColor = pulseColor;
+            fillColor.A = 26;
+            pulseColor.A = 230;
+            ClickPulse.Fill = new SolidColorBrush(fillColor);
+            ClickPulse.Stroke = new SolidColorBrush(pulseColor);
+            ClickPulse.StrokeThickness = 3;
+        }
+        else
+        {
+            pulseColor.A = 42;
+            ClickPulse.Fill = new SolidColorBrush(pulseColor);
+            ClickPulse.Stroke = null;
+            ClickPulse.StrokeThickness = 0;
+        }
         var local = PointFromScreen(new WpfPoint(screenX, screenY));
         Canvas.SetLeft(ClickPulse, local.X - size / 2);
         Canvas.SetTop(ClickPulse, local.Y - size / 2);
         ClickPulse.Visibility = Visibility.Visible;
-        var scale = new ScaleTransform(0.92, 0.92, size / 2, size / 2);
+        var startScale = compact ? 0.55 : 0.92;
+        var endScale = compact ? 1.35 : 1;
+        var duration = TimeSpan.FromMilliseconds(compact ? 260 : 220);
+        var scale = new ScaleTransform(startScale, startScale, size / 2, size / 2);
         ClickPulse.RenderTransform = scale;
-        scale.BeginAnimation(ScaleTransform.ScaleXProperty, new DoubleAnimation(0.92, 1, TimeSpan.FromMilliseconds(220)));
-        scale.BeginAnimation(ScaleTransform.ScaleYProperty, new DoubleAnimation(0.92, 1, TimeSpan.FromMilliseconds(220)));
-        var fade = new DoubleAnimation(0.55, 0, TimeSpan.FromMilliseconds(220));
+        scale.BeginAnimation(ScaleTransform.ScaleXProperty, new DoubleAnimation(startScale, endScale, duration));
+        scale.BeginAnimation(ScaleTransform.ScaleYProperty, new DoubleAnimation(startScale, endScale, duration));
+        var fade = new DoubleAnimation(compact ? 1 : 0.55, 0, duration);
         fade.Completed += (_, _) => { ClickPulse.Visibility = Visibility.Collapsed; HideIfIdle(); };
         ClickPulse.BeginAnimation(OpacityProperty, fade);
     }
