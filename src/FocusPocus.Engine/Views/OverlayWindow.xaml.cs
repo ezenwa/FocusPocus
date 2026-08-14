@@ -19,6 +19,7 @@ public partial class OverlayWindow : Window
 {
     private readonly System.Windows.Threading.DispatcherTimer _timer;
     private readonly System.Windows.Threading.DispatcherTimer _keyTimer;
+    private readonly CompactClickWindow _compactClickWindow;
     private AppSettings _settings;
     private bool _spotlightVisible;
     private Forms.Screen _screen;
@@ -30,9 +31,11 @@ public partial class OverlayWindow : Window
         _screen = screen;
         _timer = new() { Interval = TimeSpan.FromMilliseconds(16) };
         _timer.Tick += (_, _) => UpdateSpot();
+        _compactClickWindow = new CompactClickWindow();
         _keyTimer = new() { Interval = TimeSpan.FromSeconds(1.4) };
         _keyTimer.Tick += (_, _) => { _keyTimer.Stop(); KeyBadge.Visibility = Visibility.Collapsed; };
         SourceInitialized += MakeClickThrough;
+        Closed += (_, _) => _compactClickWindow.Close();
         ApplySettings(settings);
     }
 
@@ -65,7 +68,10 @@ public partial class OverlayWindow : Window
     {
         var hwnd = new WindowInteropHelper(this).Handle;
         if (hwnd == 0) return;
-        var b = _screen.Bounds;
+        // The full-screen overlay is only needed for spotlight dimming. Click-only and
+        // keystroke-only modes stay inside the working area so the transparent topmost
+        // window never overlaps or visually alters the Windows taskbar.
+        var b = _spotlightVisible ? _screen.Bounds : _screen.WorkingArea;
         if (!NativeMethods.GetWindowRect(hwnd, out var current) || current.Left != b.Left || current.Top != b.Top ||
             current.Right - current.Left != b.Width || current.Bottom - current.Top != b.Height)
             NativeMethods.SetWindowPos(hwnd, new nint(-1), b.Left, b.Top, b.Width, b.Height,
@@ -85,6 +91,7 @@ public partial class OverlayWindow : Window
         if (enabled)
         {
             if (!IsVisible) Show();
+            EnforceScreenBounds();
             _timer.Start();
             Dimmer.BeginAnimation(OpacityProperty, null);
             Dimmer.Visibility = Visibility.Visible;
@@ -102,6 +109,7 @@ public partial class OverlayWindow : Window
         {
             _timer.Stop();
             HideDimmer();
+            if (IsVisible) EnforceScreenBounds();
             HideIfIdle();
         }
     }
@@ -160,41 +168,39 @@ public partial class OverlayWindow : Window
 
     public void ShowClick(bool left, int screenX, int screenY, string color)
     {
-        if (!IsVisible) Show();
         var compact = !_spotlightVisible;
-        if (compact) HideDimmer();
-        var size = compact ? 36d : Math.Max(80d, _settings.SpotDiameter * 0.88);
+        if (compact)
+        {
+            HideDimmer();
+            if (IsVisible && KeyBadge.Visibility != Visibility.Visible) Hide();
+            _compactClickWindow.ShowPulse(screenX, screenY, color);
+            return;
+        }
+
+        var clickScreen = Forms.Screen.FromPoint(new System.Drawing.Point(screenX, screenY));
+        if (!string.Equals(clickScreen.DeviceName, _screen.DeviceName, StringComparison.OrdinalIgnoreCase))
+            MoveToScreen(clickScreen);
+        if (!IsVisible) Show();
+        var size = Math.Max(80d, _settings.SpotDiameter * 0.88);
         ClickPulse.Width = size;
         ClickPulse.Height = size;
         var pulseColor = (WpfColor)WpfColorConverter.ConvertFromString(color);
-        if (compact)
-        {
-            var fillColor = pulseColor;
-            fillColor.A = 26;
-            pulseColor.A = 230;
-            ClickPulse.Fill = new SolidColorBrush(fillColor);
-            ClickPulse.Stroke = new SolidColorBrush(pulseColor);
-            ClickPulse.StrokeThickness = 3;
-        }
-        else
-        {
-            pulseColor.A = 42;
-            ClickPulse.Fill = new SolidColorBrush(pulseColor);
-            ClickPulse.Stroke = null;
-            ClickPulse.StrokeThickness = 0;
-        }
+        pulseColor.A = 42;
+        ClickPulse.Fill = new SolidColorBrush(pulseColor);
+        ClickPulse.Stroke = null;
+        ClickPulse.StrokeThickness = 0;
         var local = PointFromScreen(new WpfPoint(screenX, screenY));
         Canvas.SetLeft(ClickPulse, local.X - size / 2);
         Canvas.SetTop(ClickPulse, local.Y - size / 2);
         ClickPulse.Visibility = Visibility.Visible;
-        var startScale = compact ? 0.55 : 0.92;
-        var endScale = compact ? 1.35 : 1;
-        var duration = TimeSpan.FromMilliseconds(compact ? 260 : 220);
+        const double startScale = 0.92;
+        const double endScale = 1;
+        var duration = TimeSpan.FromMilliseconds(220);
         var scale = new ScaleTransform(startScale, startScale, size / 2, size / 2);
         ClickPulse.RenderTransform = scale;
         scale.BeginAnimation(ScaleTransform.ScaleXProperty, new DoubleAnimation(startScale, endScale, duration));
         scale.BeginAnimation(ScaleTransform.ScaleYProperty, new DoubleAnimation(startScale, endScale, duration));
-        var fade = new DoubleAnimation(compact ? 1 : 0.55, 0, duration);
+        var fade = new DoubleAnimation(0.55, 0, duration);
         fade.Completed += (_, _) => { ClickPulse.Visibility = Visibility.Collapsed; HideIfIdle(); };
         ClickPulse.BeginAnimation(OpacityProperty, fade);
     }

@@ -10,6 +10,7 @@ All notable changes to FocusPocus are documented here.
 - Restore-defaults action in the behavior settings.
 - Checked tray-menu controls for spotlight, clicks, and keystrokes.
 - Compact click-only indicator when the spotlight is disabled.
+- Dedicated 64 px click-only window, isolated from the full-screen spotlight overlay.
 
 ### Fixed
 
@@ -17,6 +18,7 @@ All notable changes to FocusPocus are documented here.
 - Settings writes are atomic to prevent partial reads while both processes are running.
 - Upgrades no longer reuse the legacy installation directory name.
 - The dimming layer is forcibly collapsed during click-only mode, including after spotlight fade animations.
+- Click-only and keystroke-only overlays exclude the Windows taskbar from their window bounds.
 
 ## [2.1.0] - 2026-08-13
 
